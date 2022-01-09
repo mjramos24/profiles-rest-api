@@ -2,9 +2,13 @@ from rest_framework.views import APIView #Rest framework is the Djano rest frame
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from rest_framework.authentication import TokenAuthentication ###type of authentication we use for users to authenticate themselves our API
+                                                              ###it works by generating a random token string when user logs in. This is to make sure
+                                                              ###that every request have been authenticated correctly
 
 from profiles_api import serializers
-
+from profiles_api import models
+from profiles_api import permissions
 
 class HelloApiView(APIView):
     """Test API View"""
@@ -94,3 +98,12 @@ class HelloViewSet(viewsets.ViewSet):
     def destroy(self, request, pk=None):
         """Handle removing an object"""
         return Response({'http_method':'DELETE'})
+
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    """Handle creating and udpating profiles"""
+    serializer_class = serializers.UserProfileSerializer
+    queryset = models.UserProfile.objects.all()
+    authentication_class = (TokenAuthentication,)###The comma is added so that it will be created as a tuple
+                                                 ###This is how the user will authenticate
+    permission_classes = (permissions.UpdateOwnProfile,)
