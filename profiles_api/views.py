@@ -6,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication ###type of authent
                                                               ###it works by generating a random token string when user logs in. This is to make sure
                                                               ###that every request have been authenticated correctly
 
+from rest_framework import filters ### add filter to a viewset
 from profiles_api import serializers
 from profiles_api import models
 from profiles_api import permissions
@@ -107,3 +108,5 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     authentication_class = (TokenAuthentication,)###The comma is added so that it will be created as a tuple
                                                  ###This is how the user will authenticate
     permission_classes = (permissions.UpdateOwnProfile,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name', 'email',) ###search for items name and email field
