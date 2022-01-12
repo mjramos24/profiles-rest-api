@@ -7,6 +7,9 @@ from rest_framework.authentication import TokenAuthentication ###type of authent
                                                               ###that every request have been authenticated correctly
 
 from rest_framework import filters ### add filter to a viewset
+from rest_framework.authtoken.views import ObtainAuthToken ###view that comes with the Django rest framework that we can use to generate an
+                                                           ###auth token
+from rest_framework.settings import api_settings
 from profiles_api import serializers
 from profiles_api import models
 from profiles_api import permissions
@@ -110,3 +113,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.UpdateOwnProfile,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name', 'email',) ###search for items name and email field
+
+
+class UserLoginApiView(ObtainAuthToken):
+    """Handle creating user authentication tokens"""
+    renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES ###adds the renderer classes to obtain auth token view which will enable it in the Django admin
+    
